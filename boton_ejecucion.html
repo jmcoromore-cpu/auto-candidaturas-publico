@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>auto-candidaturas · Ejecutar pipeline</title>
+<style>
+  :root { --azul: #1b3155; --gris: #e9ebf0; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--gris);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .tarjeta {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(27, 49, 85, .18);
+    max-width: 460px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .cabecera {
+    background: var(--azul);
+    color: #fff;
+    padding: 22px 26px;
+  }
+  .cabecera h1 { margin: 0; font-size: 20px; }
+  .cabecera p { margin: 6px 0 0; font-size: 13px; opacity: .85; }
+  .cuerpo { padding: 24px 26px; }
+  label { display: block; font-size: 13px; font-weight: bold; color: var(--azul); margin: 12px 0 4px; }
+  input[type=text], input[type=password] {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid #c6ccd6;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  .recordar { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13px; color: #444; }
+  button {
+    width: 100%;
+    margin-top: 18px;
+    padding: 13px;
+    background: var(--azul);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button:hover { background: #24417a; }
+  button:disabled { background: #8b97ab; cursor: wait; }
+  #estado { margin-top: 14px; font-size: 14px; text-align: center; min-height: 20px; }
+  .ok { color: #1a7f37; font-weight: bold; }
+  .error { color: #b91c1c; font-weight: bold; }
+  .ayuda { font-size: 12px; color: #666; margin-top: 18px; line-height: 1.5; }
+  .ayuda a { color: var(--azul); }
+</style>
+</head>
+<body>
+<div class="tarjeta">
+  <div class="cabecera">
+    <h1>Pipeline de candidaturas</h1>
+    <p>Lanza ahora mismo la búsqueda de ofertas y el envío del reporte a tu correo.</p>
+  </div>
+  <div class="cuerpo">
+    <label for="usuario">Tu usuario de GitHub</label>
+    <input type="text" id="usuario" placeholder="p. ej. josemanuel-coronel">
+
+    <label for="token">Token de acceso (fine-grained PAT)</label>
+    <input type="password" id="token" placeholder="github_pat_...">
+
+    <div class="recordar">
+      <input type="checkbox" id="recordar">
+      <label for="recordar" style="margin:0;font-weight:normal;color:#444;">
+        Recordar en este navegador
+      </label>
+    </div>
+
+    <button id="boton" onclick="ejecutar()">▶ Ejecutar pipeline ahora</button>
+    <div id="estado"></div>
+
+    <div class="ayuda">
+      <b>Cómo crear el token (una sola vez):</b>
+      <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">
+      github.com/settings/personal-access-tokens/new</a> →
+      Repository access: <i>Only select repositories</i> → <b>auto-candidaturas</b> →
+      Permissions → Repository permissions → <b>Actions: Read and write</b> → Generate token.
+      <br><br>
+      ⚠️ El token da control sobre las ejecuciones de tu repositorio: no compartas
+      este archivo con el token guardado ni lo subas a un repositorio público.
+      El reporte tarda en llegar unos 5–8 minutos tras pulsar el botón.
+    </div>
+  </div>
+</div>
+
+<script>
+  const REPO = "auto-candidaturas";
+  const WORKFLOW = "pipeline_diario.yml";
+  const RAMA = "main";
+
+  // Cargar datos guardados (si el usuario marcó "recordar")
+  window.addEventListener("DOMContentLoaded", () => {
+    const guardado = JSON.parse(localStorage.getItem("autocandidaturas") || "{}");
+    if (guardado.usuario) document.getElementById("usuario").value = guardado.usuario;
+    if (guardado.token) {
+      document.getElementById("token").value = guardado.token;
+      document.getElementById("recordar").checked = true;
+    }
+  });
+
+  async function ejecutar() {
+    const usuario = document.getElementById("usuario").value.trim();
+    const token = document.getElementById("token").value.trim();
+    const estado = document.getElementById("estado");
+    const boton = document.getElementById("boton");
+
+    if (!usuario || !token) {
+      estado.className = "error";
+      estado.textContent = "Rellena el usuario y el token.";
+      return;
+    }
+
+    if (document.getElementById("recordar").checked) {
+      localStorage.setItem("autocandidaturas", JSON.stringify({ usuario, token }));
+    } else {
+      localStorage.removeItem("autocandidaturas");
+    }
+
+    boton.disabled = true;
+    estado.className = "";
+    estado.textContent = "Lanzando el workflow...";
+
+    try {
+      const respuesta = await fetch(
+        `https://api.github.com/repos/${usuario}/${REPO}/actions/workflows/${WORKFLOW}/dispatches`,
+        {
+          method: "POST",
+          headers: {
+            "Accept": "application/vnd.github+json",
+            "Authorization": `Bearer ${token}`,
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+          body: JSON.stringify({ ref: RAMA }),
+        }
+      );
+
+      if (respuesta.status === 204) {
+        estado.className = "ok";
+        estado.textContent = "✅ Pipeline en marcha. El reporte llegará a tu correo en 5-8 min.";
+      } else {
+        const detalle = await respuesta.json().catch(() => ({}));
+        estado.className = "error";
+        estado.textContent = `❌ Error ${respuesta.status}: ${detalle.message || "revisa usuario y token"}`;
+      }
+    } catch (e) {
+      estado.className = "error";
+      estado.textContent = "❌ Error de red: " + e.message;
+    } finally {
+      boton.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>

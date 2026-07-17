@@ -1,0 +1,179 @@
+%======================================================================
+% Plantilla de CV — Juan García López
+%
+% Marcadores que rellena el pipeline (NO los borres si editas el diseño).
+% Se escriben entre corchetes en el cuerpo del documento; aquí se nombran
+% sin corchetes para que la sustitución no toque estos comentarios:
+%   HEADLINE         titular bajo el nombre (p. ej. INGENIERO DE PROCESOS)
+%   PROFILE_SUMMARY  párrafo "Mi perfil" adaptado a la oferta
+%   INERCO_BULLETS   viñetas \item de la experiencia en INERCO
+%   COMPANY_NAME y JOB_TITLE  se usan en los metadatos del PDF
+%
+% La foto debe llamarse foto.jpg y estar en plantillas/assets/.
+%======================================================================
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=0cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={CV Juan García López - [JOB_TITLE] - [COMPANY_NAME]}}
+
+\definecolor{azulcv}{HTML}{1B3155}
+\definecolor{grisfondo}{HTML}{E9EBF0}
+\definecolor{grisoscuro}{HTML}{555C66}
+
+\renewcommand{\familydefault}{\sfdefault}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% ---------- estilos ----------
+\newcommand{\tituloseccion}[1]{%
+  {\color{azulcv}\Large\bfseries\textls[60]{#1}}\\[2pt]
+  {\color{azulcv}\rule{2.2cm}{1.6pt}}\\[10pt]}
+\newcommand{\titulolateral}[1]{%
+  {\color{azulcv}\large\bfseries\textls[60]{#1}}\\[6pt]}
+\newcommand{\entrada}[2]{%
+  {\bfseries\color{azulcv}#1}\\[1pt]
+  {\small\color{grisoscuro}#2}\\[4pt]}
+\setlist[itemize]{leftmargin=12pt,itemsep=2pt,parsep=0pt,topsep=2pt,label=\textbullet}
+
+\begin{document}
+
+% ============================ PÁGINA 1 ============================
+\begin{tikzpicture}[remember picture,overlay]
+  % Banner superior azul
+  \fill[azulcv] (current page.north west) rectangle ([yshift=-4.6cm]current page.north east);
+  % Columna lateral gris
+  \fill[grisfondo] ([yshift=-4.6cm]current page.north west)
+    rectangle ([xshift=7.0cm]current page.south west);
+
+  % Foto con marco blanco (solapada sobre el banner)
+  \node[anchor=north west,inner sep=0]
+      at ([xshift=1.15cm,yshift=-1.05cm]current page.north west)
+    {\setlength{\fboxsep}{3pt}\colorbox{white}{\includegraphics[width=3.2cm]{foto.jpg}}};
+
+  % Nombre y titular adaptado a la oferta
+  \node[anchor=north east,inner sep=0,text width=12.2cm,align=flush right]
+      at ([xshift=-1.3cm,yshift=-1.25cm]current page.north east) {%
+    {\color{white}\fontsize{25}{30}\selectfont\bfseries JOSÉ MANUEL\\[2pt] CORONEL MORENO}\\[14pt]
+    {\color{white}\normalsize\bfseries\textls[220]{[HEADLINE]}}%
+  };
+
+  % ------------------------ Columna lateral ------------------------
+  \node[anchor=north west,inner sep=0,text width=4.9cm]
+      at ([xshift=1.05cm,yshift=-6.4cm]current page.north west) {%
+    \titulolateral{CONTACTO}
+    \small
+    \textbf{Teléfono:} 672 871 128\\[2pt]
+    \textbf{Email:} \href{mailto:juangarcialopez@gmail.com}{juangarcialopez@gmail.com}\\[2pt]
+    \textbf{Ubicación:} Huelva, España\\[16pt]
+    \titulolateral{INFORMACIÓN}
+    \small
+    \begin{itemize}
+      \item Carnet de conducir
+      \item Disponibilidad horaria
+      \item Edad: 22 años
+    \end{itemize}
+    \vspace{12pt}
+    \titulolateral{HERRAMIENTAS}
+    \small
+    Excel \,·\, Python \,·\, MATLAB\\[2pt]
+    PVsyst \,·\, SAM \,·\, AutoCAD\\[2pt]
+    Symmetry\\[16pt]
+    \titulolateral{IDIOMAS}
+    \small
+    \textbf{Español:} nativo\\[2pt]
+    \textbf{Inglés:} B2 Cambridge%
+  };
+
+  % ----------------------- Columna principal -----------------------
+  \node[anchor=north west,inner sep=0,text width=12.1cm]
+      at ([xshift=8.0cm,yshift=-5.5cm]current page.north west) {%
+    \tituloseccion{MI PERFIL}
+    [PROFILE_SUMMARY]\\[16pt]
+    \tituloseccion{FORMACIÓN}
+    \entrada{INGENIERÍA INDUSTRIAL (2022 -- 2026)}
+            {E.T.S.I. -- Universidad de Sevilla \,·\, Nota media: 8.0 \,·\, Nota TFG: 10}
+    \entrada{CURSO EN INDUSTRIA QUÍMICA (2026)}
+            {Grupo Aspasia -- Códice Cantabria}
+    \entrada{CURSO EN ANÁLISIS Y PREVENCIÓN DE RIESGOS LABORALES (2026)}
+            {E.T.S.I. -- Universidad de Sevilla}
+    \entrada{GRADO DE ADMINISTRACIÓN (2016 -- 2022)}
+            {IES la Orden -- Huelva}
+    \vspace{12pt}
+    \tituloseccion{EXPERIENCIA}
+    \entrada{BECARIO DE INGENIERÍA -- MOEVE}{Febrero 2026 -- Agosto 2026}
+    \begin{itemize}
+[INERCO_BULLETS]
+    \end{itemize}
+    \vspace{8pt}
+    \entrada{PROFESOR DE QUIMICA}{2023 -- 2025}
+    \begin{itemize}
+      \item Enseñanza de química
+            a alumnos de entre 6 y 12 años.
+    \end{itemize}
+    \vspace{8pt}
+    \entrada{PROFESOR DE CLASES PARTICULARES}{Julio y agosto de 2023}
+    \begin{itemize}
+      \item Impartí asignaturas como Física, Matemáticas o Inglés a alumnos
+            de ESO y Bachillerato.
+    \end{itemize}%
+  };
+\end{tikzpicture}
+\null
+
+% ============================ PÁGINA 2 ============================
+\newpage
+\begin{tikzpicture}[remember picture,overlay]
+  % Banda superior azul
+  \fill[azulcv] (current page.north west) rectangle ([yshift=-2.6cm]current page.north east);
+  \node[anchor=west,inner sep=0] at ([xshift=1.2cm,yshift=-1.3cm]current page.north west)
+    {\color{white}\Large\bfseries JUAN GARCÍA LÓPEZ};
+  \node[anchor=east,inner sep=0] at ([xshift=-1.2cm,yshift=-1.3cm]current page.north east)
+    {\color{white}\normalsize\bfseries\textls[160]{[HEADLINE]}};
+
+  % Contenido a página completa
+  \node[anchor=north west,inner sep=0,text width=18.6cm]
+      at ([xshift=1.2cm,yshift=-3.8cm]current page.north west) {%
+    \tituloseccion{PROYECTOS ACADÉMICOS}
+    \entrada{INSTALACIÓN FOTOVOLTAICA DE AUTOCONSUMO EN UN INSTITUTO}
+            {Diseño completo y simulación en PVsyst}
+    \begin{itemize}
+      \item Dimensioné la instalación según el consumo real del centro y la radiación
+            de la localización.
+      \item Estudié el retorno económico de la instalación con baterías y sin ellas.
+      \item Seleccioné los componentes: panel fotovoltaico, inversor y batería.
+      \item Simulé la instalación completa con el programa PVsyst.
+    \end{itemize}
+    \vspace{10pt}
+    \entrada{DISEÑO DE CENTRAL TERMOSOLAR CILINDROPARABÓLICA}
+            {Modelado con SAM (System Advisor Model)}
+    \begin{itemize}
+      \item Diseñé la central cilindroparabólica situada en San José del Valle con SAM.
+      \item Estudié la viabilidad del HTF tanto con aceite térmico como con sales fundidas.
+      \item Optimicé las horas de almacenamiento y el múltiplo solar.
+    \end{itemize}
+    \vspace{10pt}
+    \entrada{VIABILIDAD TÉCNICA DE UN PARQUE EÓLICO OFFSHORE EN EL ESTRECHO DE GIBRALTAR}
+            {Estudio de emplazamiento y tecnología}
+    \begin{itemize}
+      \item Seleccioné el emplazamiento atendiendo a profundidades, zonas restringidas
+            y velocidades de viento.
+      \item Elegí la turbina más apropiada para el parque y el tipo de cimentación.
+      \item Localicé el punto de conexión en tierra.
+    \end{itemize}
+    \vspace{10pt}
+    \tituloseccion{RECONOCIMIENTOS}
+    \begin{itemize}
+      \item Matrícula de Honor en Bachillerato.
+    \end{itemize}%
+  };
+\end{tikzpicture}
+\null
+\end{document}

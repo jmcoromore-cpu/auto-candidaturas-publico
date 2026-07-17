@@ -1,0 +1,60 @@
+%======================================================================
+% Plantilla de carta de presentación — Juan García López
+%
+% Marcadores que rellena el pipeline (NO los borres si editas el diseño).
+% Se escriben entre corchetes en el cuerpo del documento; aquí se nombran
+% sin corchetes para que la sustitución no toque estos comentarios:
+%   COMPANY_NAME  nombre de la empresa
+%   JOB_TITLE     título del puesto
+%   LETTER_BODY   cuerpo de la carta (3 párrafos generados por Gemini)
+%   FECHA         fecha de generación
+%======================================================================
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,top=0cm,bottom=2.5cm,left=2.4cm,right=2.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Carta de presentacion - [JOB_TITLE] - [COMPANY_NAME]}}
+
+\definecolor{azulcv}{HTML}{1B3155}
+\renewcommand{\familydefault}{\sfdefault}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{10pt}
+
+\begin{document}
+
+% Cabecera con banda azul
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[azulcv] (current page.north west) rectangle ([yshift=-3.4cm]current page.north east);
+  \node[anchor=west,inner sep=0] at ([xshift=2.4cm,yshift=-1.4cm]current page.north west)
+    {\color{white}\LARGE\bfseries JUAN GARCÍA LÓPEZ};
+  \node[anchor=west,inner sep=0] at ([xshift=2.4cm,yshift=-2.4cm]current page.north west)
+    {\color{white}\small 672 827 238 \,·\, juangarcialopez@gmail.com \,·\, Huelva, España};
+\end{tikzpicture}
+
+\vspace*{4.4cm}
+
+\hfill [FECHA]\par
+
+\textbf{\color{azulcv}Departamento de Selección de Personal}\\
+\textbf{\color{azulcv}[COMPANY_NAME]}
+
+\textbf{Asunto:} candidatura al puesto de [JOB_TITLE]
+
+Estimado equipo de selección:
+
+[LETTER_BODY]
+
+Quedo a su disposición para ampliar cualquier información en una entrevista.
+
+Atentamente,
+
+\vspace{6pt}
+\textbf{José Manuel Coronel Moreno}
+
+\end{document}
