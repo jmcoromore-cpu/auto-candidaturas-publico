@@ -1,4 +1,5 @@
-# auto-candidaturas
+# auto-candidaturas-publico
+**Versión pública del programa creado para la búsqueda de empleo automática**
 
 Pipeline automático de búsqueda de empleo que se ejecuta **solo, cada día a las 15:00 (España)** en GitHub Actions, sin servidor propio. Busca ofertas de ingeniería publicadas en las **últimas 24 horas en la provincia de Huelva**, las filtra con IA según tu perfil, genera CV y carta de presentación personalizados en PDF, localiza perfiles de Talent Acquisition de cada empresa y envía un reporte por email con todo listo para aplicar.
 
